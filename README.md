@@ -101,24 +101,37 @@ GET /api/observability/logs
 
 ## Run Project
 
-Install dependencies
+### 1. Clone Repository
+
+```bash
+git clone <repository-url>
+```
+
+### 2. Masuk ke folder project
+
+```bash
+cd app
+```
+
+> Jika source code berada di folder `app`. Pastikan perintah dijalankan dari root repository.
+
+### 3. Install Dependencies
 
 ```bash
 npm install
 ```
 
-Run development server
+### 4. Jalankan Development Server
 
 ```bash
 npm run dev
 ```
 
-Application URL
+### 5. Buka Browser
 
 ```
 http://localhost:8080
 ```
-
 ---
 
 ## Repository Structure
