@@ -1,0 +1,150 @@
+{
+  "info": {
+    "name": "CreditCore — Mock API",
+    "description": "Enterprise Credit Scoring Mock API for the Communication Protocols UAS demonstration. Base URL is driven by the `baseUrl` environment variable — never hardcoded.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Infrastructure",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-client-type", "value": "Postman" }],
+            "url": { "raw": "{{baseUrl}}/api/health", "host": ["{{baseUrl}}"], "path": ["api", "health"] }
+          }
+        },
+        {
+          "name": "Dashboard Metrics",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-client-type", "value": "Postman" }],
+            "url": { "raw": "{{baseUrl}}/api/dashboard", "host": ["{{baseUrl}}"], "path": ["api", "dashboard"] }
+          }
+        },
+        {
+          "name": "Observability — Logs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-client-type", "value": "Postman" }],
+            "url": { "raw": "{{baseUrl}}/api/observability/logs", "host": ["{{baseUrl}}"], "path": ["api", "observability", "logs"] }
+          }
+        },
+        {
+          "name": "Simulation — Get",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-client-type", "value": "Postman" }],
+            "url": { "raw": "{{baseUrl}}/api/simulation", "host": ["{{baseUrl}}"], "path": ["api", "simulation"] }
+          }
+        },
+        {
+          "name": "Simulation — Trigger 500",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "content-type", "value": "application/json" },
+              { "key": "x-client-type", "value": "Postman" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"statusOverride\": \"500\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/simulation", "host": ["{{baseUrl}}"], "path": ["api", "simulation"] }
+          }
+        },
+        {
+          "name": "Simulation — Reset",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "content-type", "value": "application/json" },
+              { "key": "x-client-type", "value": "Postman" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"statusOverride\": \"none\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/simulation", "host": ["{{baseUrl}}"], "path": ["api", "simulation"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Business API",
+      "item": [
+        {
+          "name": "Create Assessment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const body = pm.response.json();",
+                  "  if (body?.data?.assessmentId) pm.environment.set('assessmentId', body.data.assessmentId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "content-type", "value": "application/json" },
+              { "key": "x-client-type", "value": "Postman" },
+              { "key": "x-correlation-id", "value": "{{$guid}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": \"ACC-2026-0042\",\n  \"borrowerName\": \"Anam Setiawan\",\n  \"requestedAmount\": 10000000,\n  \"monthlyIncome\": 15000000,\n  \"employmentLengthMonths\": 24,\n  \"purposeOfLoan\": \"Business Venture\",\n  \"numberOfDependents\": 2,\n  \"slikStatus\": \"Kolektibilitas 1\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/assessments", "host": ["{{baseUrl}}"], "path": ["api", "assessments"] }
+          }
+        },
+        {
+          "name": "List Assessments",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-client-type", "value": "Postman" }],
+            "url": { "raw": "{{baseUrl}}/api/assessments", "host": ["{{baseUrl}}"], "path": ["api", "assessments"] }
+          }
+        },
+        {
+          "name": "Get Assessment by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-client-type", "value": "Postman" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/assessments/{{assessmentId}}",
+              "host": ["{{baseUrl}}"], "path": ["api", "assessments", "{{assessmentId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Credit Score",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-client-type", "value": "Postman" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/credit-scores/{{assessmentId}}",
+              "host": ["{{baseUrl}}"], "path": ["api", "credit-scores", "{{assessmentId}}"]
+            }
+          }
+        },
+        {
+          "name": "Patch Assessment Status → Completed",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "content-type", "value": "application/json" },
+              { "key": "x-client-type", "value": "Postman" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"Completed\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/api/assessments/{{assessmentId}}/status",
+              "host": ["{{baseUrl}}"], "path": ["api", "assessments", "{{assessmentId}}", "status"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
